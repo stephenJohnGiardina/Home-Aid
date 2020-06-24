@@ -1,13 +1,15 @@
 import React from 'react';
-import style from '../css/Dashboard.css';
 import $ from 'jquery';
+import PropTypes from 'prop-types';
+import style from '../css/Dashboard.css';
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
+    const { chores, user } = this.props;
     this.state = {
-      chores: this.props.chores,
-      user: this.props.user,
+      chores,
+      user,
       makeNewChore: false,
       choreName: '',
       when: '',
@@ -36,33 +38,62 @@ class Dashboard extends React.Component {
   }
 
   addToList(event) {
-    let newArray = this.state[event.target.id];
+    const { id } = event.target;
+    const { state } = this;
+    const {
+      who,
+      suppliesNeeded,
+      subtasks,
+      whoArray,
+      suppliesNeededArray,
+      subtasksArray,
+    } = state;
+    const { newArray } = state[id];
     if (event.target.id === 'whoArray') {
-      if (this.state.who.length !== 0) {newArray.push(this.state.who)}
+      if (who.length !== 0) {
+        const whoItem = {
+          name: who,
+          index: whoArray.length,
+        };
+        newArray.push(whoItem);
+      }
       this.setState({
-        who: ''
+        who: '',
       });
     }
     if (event.target.id === 'suppliesNeededArray') {
-      if (this.state.suppliesNeeded.length !== 0) {newArray.push(this.state.suppliesNeeded)}
+      if (suppliesNeeded.length !== 0) {
+        const suppliesNeededItem = {
+          name: suppliesNeeded,
+          index: suppliesNeededArray.length,
+        };
+        newArray.push(suppliesNeededItem);
+      }
       this.setState({
-        suppliesNeeded: ''
+        suppliesNeeded: '',
       });
     }
     if (event.target.id === 'subtasksArray') {
-      if (this.state.subtasks.length !== 0) {newArray.push(this.state.subtasks)}
+      if (subtasks.length !== 0) {
+        const subtasksItem = {
+          name: subtasks,
+          index: subtasksArray.length,
+        };
+        newArray.push(subtasksItem);
+      }
       this.setState({
-        subtasks: ''
+        subtasks: '',
       });
     }
     this.setState({
-      [event.target.id]: newArray
-    })
+      [event.target.id]: newArray,
+    });
   }
 
   makeNewChore() {
+    const { makeNewChore } = this.state;
     this.setState({
-      makeNewChore: !this.state.makeNewChore,
+      makeNewChore: !makeNewChore,
       whoArray: [],
       suppliesNeededArray: [],
       subtasksArray: [],
@@ -70,102 +101,123 @@ class Dashboard extends React.Component {
   }
 
   createNewChore() {
+    const { user } = this.state;
     $.ajax({
       url: '/newChore',
       type: 'POST',
       data: {
         data: JSON.stringify(this.state),
-        user: this.props.user
+        user,
       },
       success: (data) => {
-      console.log(data.chores);
-      this.setState({
-        chores: data.chores,
-        makeNewChore: false,
-        whoArray: [],
-        suppliesNeededArray: [],
-        subtasksArray: [],
-      });
-      }
-    })
+        this.setState({
+          chores: data.chores,
+          makeNewChore: false,
+          whoArray: [],
+          suppliesNeededArray: [],
+          subtasksArray: [],
+        });
+      },
+    });
   }
 
   render() {
+    const { user } = this.props;
     let form;
-    if (this.state.makeNewChore) {
+    const {
+      chores,
+      makeNewChore,
+      whoArray,
+      suppliesNeededArray,
+      subtasksArray,
+    } = this.state;
+    if (makeNewChore) {
       form = (
         <div>
           Chore Name:
-          <input onChange={this.handleChange} type="text" id="choreName"></input>
-          <br></br>
+          <input onChange={this.handleChange} type="text" id="choreName" />
+          <br />
           When:
-          <input onChange={this.handleChange} type="text" id="when"></input>
-          <br></br>
+          <input onChange={this.handleChange} type="text" id="when" />
+          <br />
           Who:
-          <input onChange={this.handleChange} type="text" id="who"></input><button onClick={this.addToList} id="whoArray">ADD</button>
-          {this.state.whoArray.map((item, key) => {
+          <input onChange={this.handleChange} type="text" id="who" />
+          <button type="button" onClick={this.addToList} id="whoArray">ADD</button>
+          {whoArray.map((item) => {
             return (
-              <p key={key}>{item}</p>
+              <p key={item.index}>{item.name}</p>
             );
           })}
-          <br></br>
+          <br />
           Supplies Needed:
-          <input onChange={this.handleChange} type="text" id="suppliesNeeded"></input><button onClick={this.addToList} id="suppliesNeededArray">ADD</button>
-          {this.state.suppliesNeededArray.map((item, key) => {
+          <input onChange={this.handleChange} type="text" id="suppliesNeeded" />
+          <button type="button" onClick={this.addToList} id="suppliesNeededArray">ADD</button>
+          {suppliesNeededArray.map((item) => {
             return (
-              <p key={key}>{item}</p>
+              <p key={item.index}>{item.name}</p>
             );
           })}
-          <br></br>
+          <br />
           Cost of Supplies:
-          <input onChange={this.handleChange} type="text" id="cost"></input>
-          <br></br>
+          <input onChange={this.handleChange} type="text" id="cost" />
+          <br />
           Subtasks:
-          <input onChange={this.handleChange} type="text" id="subtasks"></input><button onClick={this.addToList} id="subtasksArray">ADD</button>
-          {this.state.subtasksArray.map((item, key) => {
+          <input onChange={this.handleChange} type="text" id="subtasks" />
+          <button type="button" onClick={this.addToList} id="subtasksArray">ADD</button>
+          {subtasksArray.map((item) => {
             return (
-              <p key={key}>{item}</p>
+              <p key={item.index}>{item.name}</p>
             );
           })}
-          <br></br>
-          <button onClick={this.createNewChore}>Create new chore</button>
+          <br />
+          <button type="button" onClick={this.createNewChore}>Create new chore</button>
         </div>
-      )
+      );
     } else {
-      form = <p></p>
+      form = <p />;
     }
     return (
       <div>
-        <h1>Welcome {this.props.user}!</h1>
+        <h1>
+          Welcome
+          {user}
+          !
+        </h1>
         <h2>Create a new chore</h2>
-        <button onClick={this.makeNewChore}>Make a new chore</button>
+        <button type="button" onClick={this.makeNewChore}>Make a new chore</button>
         {form}
         <h2>Your chores:</h2>
-        {this.state.chores.map((item, key) => {
+        {chores.map((chore) => {
           return (
-            <div className={style['chore']} key={key}>
-              <h3>{item.choreName}</h3>
-              <p>When: {item.when}</p>
+            <div className={style.choreItem} key={chore.index}>
+              <h3>{chore.choreName}</h3>
+              <p>
+                When:
+                {chore.when}
+              </p>
               <h4>People this chore is assigned to:</h4>
-              {item.whoArray.map((item, key) => {
+              {chore.whoArray.map((item) => {
                 return (
-                <p key={key}>{item}</p>
+                  <p key={item.index}>{item.name}</p>
                 );
               })}
               <h4>Supplies needed:</h4>
-              {item.suppliesNeededArray.map((item, key) => {
+              {chore.suppliesNeededArray.map((item) => {
                 return (
-                <p key={key}>{item}</p>
+                  <p key={item.index}>{item.name}</p>
                 );
               })}
-              <p><b>Cost for these supplies:</b> {item.cost}</p>
+              <p>
+                <b>Cost for these supplies:</b>
+                {chore.cost}
+              </p>
               <h4>Subtasks:</h4>
-              {item.subtasksArray.map((item, key) => {
+              {chore.subtasksArray.map((item) => {
                 return (
-                <p key={key}>{item}</p>
+                  <p key={item.index}>{item.name}</p>
                 );
               })}
-              <hr></hr>
+              <hr />
             </div>
           );
         })}
@@ -173,5 +225,10 @@ class Dashboard extends React.Component {
     );
   }
 }
+
+Dashboard.propTypes = {
+  chores: PropTypes.arrayOf(PropTypes.any).isRequired,
+  user: PropTypes.string.isRequired,
+};
 
 export default Dashboard;

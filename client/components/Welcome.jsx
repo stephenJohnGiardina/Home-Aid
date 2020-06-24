@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 class Welcome extends React.Component {
   constructor(props) {
@@ -7,9 +8,9 @@ class Welcome extends React.Component {
     };
   }
 
-
-
   render() {
+    const { username } = this.state;
+    const { handleChange, onStart, onCreateNewUser } = this.props;
     return (
       <div>
         <h1>WELCOME TO DOMESTIC MANAGER</h1>
@@ -17,23 +18,29 @@ class Welcome extends React.Component {
         <input
           type="text"
           id="username"
-          value={this.state.username}
+          value={username}
           placeholder="Your Username Here"
-          onChange={this.props.handleChange}
+          onChange={handleChange}
         />
-        <button onClick={this.props.onStart}>Start</button>
-        <h4>Don't have a username? Create one by entering in a new username here.</h4>
+        <button type="button" onClick={onStart}>Start</button>
+        <h4>Don&apost have a username? Create one by entering in a new username here.</h4>
         <input
           type="text"
           id="newUsername"
-          value={this.state.username}
+          value={username}
           placeholder="New Username"
-          onChange={this.props.handleChange}
+          onChange={handleChange}
         />
-        <button onClick={this.props.onCreateNewUser}>Create New Username</button>
+        <button type="button" onClick={onCreateNewUser}>Create New Username</button>
       </div>
     );
   }
 }
+
+Welcome.propTypes = {
+  handleChange: PropTypes.func.isRequired,
+  onStart: PropTypes.func.isRequired,
+  onCreateNewUser: PropTypes.func.isRequired,
+};
 
 export default Welcome;
