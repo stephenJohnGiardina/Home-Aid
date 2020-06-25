@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
-import Welcome from './components/Welcome';
-import Dashboard from './components/Dashboard';
+import Welcome from './components/Welcome/Welcome';
+import Dashboard from './components/Dashboard/Dashboard';
 import style from './css/App.css';
 
 class App extends React.Component {
@@ -30,7 +30,7 @@ class App extends React.Component {
       },
       success: (data) => {
         if (JSON.parse(data).length !== 0) {
-          const { chores } = JSON.parse(data)[0].chores;
+          const { chores } = JSON.parse(data)[0];
           this.setState({
             chores,
           });

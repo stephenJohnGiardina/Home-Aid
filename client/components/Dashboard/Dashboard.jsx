@@ -1,7 +1,8 @@
 import React from 'react';
 import $ from 'jquery';
 import PropTypes from 'prop-types';
-import style from '../css/Dashboard.css';
+import Chore from './components/Chore';
+import style from '../../css/components/Dashboard/Dashboard.css';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -94,8 +95,11 @@ class Dashboard extends React.Component {
     const { makeNewChore } = this.state;
     this.setState({
       makeNewChore: !makeNewChore,
+      choreName: '',
+      when: '',
       whoArray: [],
       suppliesNeededArray: [],
+      cost: 0,
       subtasksArray: [],
     });
   }
@@ -176,11 +180,12 @@ class Dashboard extends React.Component {
     } else {
       form = <p />;
     }
+    let choreCount = 0;
     return (
       <div>
         <h1>
           Welcome
-          {user}
+          {` ${user}`}
           !
         </h1>
         <h2>Create a new chore</h2>
@@ -188,38 +193,25 @@ class Dashboard extends React.Component {
         {form}
         <h2>Your chores:</h2>
         {chores.map((chore) => {
-          return (
+          let hr = <hr />;
+          if (choreCount === chores.length - 1) {
+            hr = <p />;
+          }
+          const result = (
             <div className={style.choreItem} key={chore.index}>
-              <h3>{chore.choreName}</h3>
-              <p>
-                When:
-                {chore.when}
-              </p>
-              <h4>People this chore is assigned to:</h4>
-              {chore.whoArray.map((item) => {
-                return (
-                  <p key={item.index}>{item.name}</p>
-                );
-              })}
-              <h4>Supplies needed:</h4>
-              {chore.suppliesNeededArray.map((item) => {
-                return (
-                  <p key={item.index}>{item.name}</p>
-                );
-              })}
-              <p>
-                <b>Cost for these supplies:</b>
-                {chore.cost}
-              </p>
-              <h4>Subtasks:</h4>
-              {chore.subtasksArray.map((item) => {
-                return (
-                  <p key={item.index}>{item.name}</p>
-                );
-              })}
-              <hr />
+              <Chore
+                name={chore.choreName}
+                when={chore.when}
+                whoArray={chore.whoArray}
+                suppliesNeededArray={chore.suppliesNeededArray}
+                cost={chore.cost}
+                subtasksArray={chore.subtasksArray}
+              />
+              {hr}
             </div>
           );
+          choreCount += 1;
+          return result;
         })}
       </div>
     );

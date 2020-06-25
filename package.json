@@ -4,6 +4,7 @@
   "description": "Website that helps families manage their chores",
   "main": "index.js",
   "scripts": {
+    "build": "webpack -d --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
