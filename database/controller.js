@@ -2,25 +2,33 @@ const User = require('./database');
 
 module.exports = {
   createUser: (username, callback) => {
-    const newUser = new User({
-      username,
-      chores: [],
-    });
-    newUser.save((err, user) => {
-      if (err) {
-        callback(err, null);
+    User.exists({ username }, (error, result) => {
+      if (error) {
+        callback(error, null);
+      } else if (result) {
+        callback(null, result);
       } else {
-        callback(null, user);
+        const newUser = new User({
+          username,
+          chores: [],
+        });
+        newUser.save((err, user) => {
+          if (err) {
+            callback(err, null);
+          } else {
+            callback(null, user);
+          }
+        });
       }
     });
   },
 
   createChore: (username, newChoreArray, callback) => {
-    User.findOneAndUpdate({ username }, { chores: newChoreArray }, (err, user) => {
+    User.findOneAndUpdate({ username }, { chores: newChoreArray }, { new: true }, (err, doc) => {
       if (err) {
         callback(err, null);
       } else {
-        callback(null, user);
+        callback(null, doc);
       }
     });
   },

@@ -49,7 +49,7 @@ class Dashboard extends React.Component {
       suppliesNeededArray,
       subtasksArray,
     } = state;
-    const { newArray } = state[id];
+    const newArray = state[id];
     if (event.target.id === 'whoArray') {
       if (who.length !== 0) {
         const whoItem = {
@@ -105,13 +105,34 @@ class Dashboard extends React.Component {
   }
 
   createNewChore() {
-    const { user } = this.state;
+    const {
+      chores,
+      user,
+      choreName,
+      when,
+      whoArray,
+      suppliesNeededArray,
+      cost,
+      subtasksArray,
+    } = this.state;
+    const choreData = {
+      choreName,
+      when,
+      whoArray,
+      suppliesNeededArray,
+      cost,
+      subtasksArray,
+    };
+    const post = JSON.stringify({
+      chores,
+      choreData,
+      user,
+    });
     $.ajax({
       url: '/newChore',
       type: 'POST',
       data: {
-        data: JSON.stringify(this.state),
-        user,
+        post,
       },
       success: (data) => {
         this.setState({
@@ -134,6 +155,7 @@ class Dashboard extends React.Component {
       whoArray,
       suppliesNeededArray,
       subtasksArray,
+      cost,
     } = this.state;
     if (makeNewChore) {
       form = (
@@ -163,7 +185,7 @@ class Dashboard extends React.Component {
           })}
           <br />
           Cost of Supplies:
-          <input onChange={this.handleChange} type="text" id="cost" />
+          <input onChange={this.handleChange} value={cost} type="number" id="cost" />
           <br />
           Subtasks:
           <input onChange={this.handleChange} type="text" id="subtasks" />
@@ -182,11 +204,9 @@ class Dashboard extends React.Component {
     }
     let choreCount = 0;
     return (
-      <div>
+      <div id={style.dashboard}>
         <h1>
-          Welcome
-          {` ${user}`}
-          !
+          {`Welcome ${user}!`}
         </h1>
         <h2>Create a new chore</h2>
         <button type="button" onClick={this.makeNewChore}>Make a new chore</button>

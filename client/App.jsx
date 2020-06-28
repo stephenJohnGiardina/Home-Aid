@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Banner from './components/Banner';
 import Welcome from './components/Welcome/Welcome';
 import Dashboard from './components/Dashboard/Dashboard';
 import style from './css/App.css';
@@ -9,10 +11,11 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      welcome: true,
       username: '',
       newUsername: '',
       chores: [],
+      success: false,
+      failure: false,
     };
     this.onStart = this.onStart.bind(this);
     this.onCreateNewUser = this.onCreateNewUser.bind(this);
@@ -35,9 +38,6 @@ class App extends React.Component {
             chores,
           });
         }
-        this.setState({
-          welcome: false,
-        });
       },
     });
   }
@@ -51,9 +51,17 @@ class App extends React.Component {
         newUsername,
       },
       success: (data) => {
+        if (data === true) {
+          this.setState({
+            failure: true,
+          });
+        } else if (typeof data === 'object') {
+          this.setState({
+            success: true,
+          });
+        }
         this.setState({
           username: data.username,
-          welcome: false,
           chores: [],
         });
       },
@@ -79,29 +87,46 @@ class App extends React.Component {
   }
 
   render() {
-    const { welcome, username, chores } = this.state;
-    if (welcome) {
-      return (
-        <div>
-          <div id={style.welcome}>
-            <Welcome
-              onStart={this.onStart}
-              onCreateNewUser={this.onCreateNewUser}
-              handleChange={this.handleChange}
-            />
-          </div>
-        </div>
-      );
-    }
+    const {
+      username, chores, success, failure,
+    } = this.state;
     return (
-      <div>
-        <div id={style.dashboard}>
-          <Dashboard
-            user={username}
-            chores={chores}
-            onCreateNewChore={this.onCreateNewChore}
+      <div id={style.app}>
+        <Banner />
+        <Router>
+          <Route
+            exact
+            path="/"
+            render={() => {
+              return (
+                <div>
+                  <Welcome
+                    onStart={this.onStart}
+                    onCreateNewUser={this.onCreateNewUser}
+                    handleChange={this.handleChange}
+                    success={success}
+                    failure={failure}
+                  />
+                </div>
+              );
+            }}
           />
-        </div>
+          <Route
+            exact
+            path="/dashboard"
+            render={() => {
+              return (
+                <div>
+                  <Dashboard
+                    user={username}
+                    chores={chores}
+                    onCreateNewChore={this.onCreateNewChore}
+                  />
+                </div>
+              );
+            }}
+          />
+        </Router>
       </div>
     );
   }

@@ -1,0 +1,10 @@
+.banner {
+  text-align: center;
+  background-color: #555;
+}
+
+#bannerOptions {
+  display: grid;
+  justify-content: space-between;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}

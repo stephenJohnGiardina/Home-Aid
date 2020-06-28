@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/DomesticManager', { useNewUrlParser: true });
+mongoose.connect(
+  'mongodb://localhost/DomesticManager',
+  { useNewUrlParser: true, useUnifiedTopology: true },
+);
+mongoose.set('useFindAndModify', false);
 
 const db = mongoose.connection;
 db.on('open', () => {
