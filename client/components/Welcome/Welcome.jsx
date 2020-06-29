@@ -11,12 +11,12 @@ class Welcome extends React.Component {
   }
 
   render() {
-    const { username } = this.state;
     const {
-      handleChange, onStart, onCreateNewUser, success, failure,
+      handleChange, onStart, onCreateNewUser, onDeleteAccount, success, failure, accountDeleted,
     } = this.props;
     let successMessage;
     let failureMessage;
+    let accountDeletedMessage;
     if (success) {
       successMessage = (<p>Account Creation Successful Please Log In</p>);
     } else if (!success) {
@@ -28,30 +28,49 @@ class Welcome extends React.Component {
     } else if (!failure) {
       failureMessage = <p />;
     }
+    if (accountDeleted) {
+      accountDeletedMessage = <p>Your account no longer exists.</p>;
+    } else if (!accountDeleted) {
+      accountDeletedMessage = <p />;
+    }
     return (
       <div id={style.welcome}>
         <h4>Please enter your username and press start to get started.</h4>
         <input
           type="text"
           id="username"
-          value={username}
           placeholder="Your Username Here"
           onChange={handleChange}
         />
         <Link to="/dashboard">
-          <button type="button" onClick={onStart}>Start</button>
+          <button type="button" onClick={onStart}>Log In</button>
         </Link>
+        <br />
+        <br />
         <h4>Don&apos;t have a username? Create one by entering in a new username here.</h4>
         <input
           type="text"
           id="newUsername"
-          value={username}
           placeholder="New Username"
           onChange={handleChange}
         />
         <button type="button" onClick={onCreateNewUser}>Create New Account</button>
         {successMessage}
         {failureMessage}
+        <br />
+        <h4>Want to delete your account? Type in your username here and press enter.</h4>
+        <h3>
+          WARNING: DOING THIS WILL PERMANENTLY DELETE YOUR ACCOUNT AND
+          ALL DATA ASSOCIATED WITH YOUR ACCOUNT
+        </h3>
+        <input
+          type="text"
+          id="deleteAccountName"
+          placeholder="ACCOUNT NAME"
+          onChange={handleChange}
+        />
+        <button type="button" onClick={onDeleteAccount}>DELETE</button>
+        {accountDeletedMessage}
       </div>
     );
   }
@@ -61,8 +80,10 @@ Welcome.propTypes = {
   handleChange: PropTypes.func.isRequired,
   onStart: PropTypes.func.isRequired,
   onCreateNewUser: PropTypes.func.isRequired,
+  onDeleteAccount: PropTypes.func.isRequired,
   success: PropTypes.bool.isRequired,
   failure: PropTypes.bool.isRequired,
+  accountDeleted: PropTypes.bool.isRequired,
 };
 
 export default Welcome;

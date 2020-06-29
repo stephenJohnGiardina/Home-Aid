@@ -44,6 +44,19 @@ app.post('/newChore', (req, res) => {
     } else {
       res.send(userData);
     }
+    res.end();
+  });
+});
+
+app.delete('/deleteAccount', (req, res) => {
+  const { deleteAccountName } = req.body;
+  db.deleteAccount(deleteAccountName, (err, result) => {
+    if (err) {
+      res.status(404);
+    } else {
+      res.send(result);
+    }
+    res.end();
   });
 });
 

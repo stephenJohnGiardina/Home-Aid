@@ -51,8 +51,14 @@ module.exports = {
 
   },
 
-  deleteUser: () => {
-
+  deleteAccount: (username, callback) => {
+    User.findOneAndDelete({ username }, (err, doc) => {
+      if (err) {
+        callback(err, null);
+      } else {
+        callback(null, doc);
+      }
+    });
   },
 
 };

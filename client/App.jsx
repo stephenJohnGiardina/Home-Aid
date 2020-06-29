@@ -13,14 +13,17 @@ class App extends React.Component {
     this.state = {
       username: '',
       newUsername: '',
+      deleteAccountName: '',
       chores: [],
       success: false,
       failure: false,
+      accountDeleted: false,
     };
     this.onStart = this.onStart.bind(this);
     this.onCreateNewUser = this.onCreateNewUser.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.onCreateNewChore = this.onCreateNewChore.bind(this);
+    this.onDeleteAccount = this.onDeleteAccount.bind(this);
   }
 
   onStart() {
@@ -68,6 +71,22 @@ class App extends React.Component {
     });
   }
 
+  onDeleteAccount() {
+    const { deleteAccountName } = this.state;
+    $.ajax({
+      url: '/deleteAccount',
+      type: 'DELETE',
+      data: {
+        deleteAccountName,
+      },
+      success: () => {
+        this.setState({
+          accountDeleted: true,
+        });
+      },
+    });
+  }
+
   onCreateNewChore() {
     const { username, choreName } = this.state;
     $.ajax({
@@ -88,7 +107,7 @@ class App extends React.Component {
 
   render() {
     const {
-      username, chores, success, failure,
+      username, chores, success, failure, accountDeleted,
     } = this.state;
     return (
       <div id={style.app}>
@@ -103,9 +122,11 @@ class App extends React.Component {
                   <Welcome
                     onStart={this.onStart}
                     onCreateNewUser={this.onCreateNewUser}
+                    onDeleteAccount={this.onDeleteAccount}
                     handleChange={this.handleChange}
                     success={success}
                     failure={failure}
+                    accountDeleted={accountDeleted}
                   />
                 </div>
               );
