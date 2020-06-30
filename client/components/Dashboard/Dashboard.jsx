@@ -30,6 +30,12 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
+    setTimeout(() => {
+      const { chores } = this.props;
+      this.setState({
+        chores,
+      });
+    }, 100);
   }
 
   handleChange(event) {
@@ -122,6 +128,7 @@ class Dashboard extends React.Component {
       suppliesNeededArray,
       cost,
       subtasksArray,
+      index: chores.length,
     };
     const post = JSON.stringify({
       chores,

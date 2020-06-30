@@ -17,10 +17,10 @@ app.get('/login', (req, res) => {
     if (err) {
       res.status(404);
     } else {
-      res.end(JSON.stringify(user));
+      res.send(user);
     }
+    res.end();
   });
-  // res.end();
 });
 
 app.post('/newUser', (req, res) => {

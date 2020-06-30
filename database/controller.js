@@ -34,11 +34,11 @@ module.exports = {
   },
 
   login: (username, callback) => {
-    User.find({ username }, (err, user) => {
+    User.find({ username }, (err, doc) => {
       if (err) {
         callback(err, null);
       } else {
-        callback(null, user);
+        callback(null, doc);
       }
     });
   },

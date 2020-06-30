@@ -54,10 +54,10 @@ class Chore extends React.Component {
 Chore.propTypes = {
   name: PropTypes.string.isRequired,
   when: PropTypes.string.isRequired,
-  whoArray: PropTypes.arrayOf(PropTypes.string).isRequired,
-  suppliesNeededArray: PropTypes.arrayOf(PropTypes.string).isRequired,
-  cost: PropTypes.string.isRequired,
-  subtasksArray: PropTypes.arrayOf(PropTypes.string).isRequired,
+  whoArray: PropTypes.arrayOf(PropTypes.object).isRequired,
+  suppliesNeededArray: PropTypes.arrayOf(PropTypes.object).isRequired,
+  cost: PropTypes.number.isRequired,
+  subtasksArray: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default Chore;

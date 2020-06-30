@@ -34,9 +34,10 @@ class App extends React.Component {
       data: {
         username,
       },
+      dataType: 'json',
       success: (data) => {
-        if (JSON.parse(data).length !== 0) {
-          const { chores } = JSON.parse(data)[0];
+        if (data.length !== 0) {
+          const { chores } = data[0];
           this.setState({
             chores,
           });
@@ -110,9 +111,9 @@ class App extends React.Component {
       username, chores, success, failure, accountDeleted,
     } = this.state;
     return (
-      <div id={style.app}>
-        <Banner />
-        <Router>
+      <Router>
+        <div id={style.app}>
+          <Banner />
           <Route
             exact
             path="/"
@@ -147,8 +148,8 @@ class App extends React.Component {
               );
             }}
           />
-        </Router>
-      </div>
+        </div>
+      </Router>
     );
   }
 }
