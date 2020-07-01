@@ -12,12 +12,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '/../public')));
 
 app.get('/login', (req, res) => {
-  const { username } = req.query;
-  db.login(username, (err, user) => {
+  const { user } = req.query;
+  db.login(user, (err, doc) => {
     if (err) {
       res.status(404);
     } else {
-      res.send(user);
+      res.send(doc);
     }
     res.end();
   });

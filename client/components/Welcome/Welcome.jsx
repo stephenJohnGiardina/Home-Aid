@@ -12,7 +12,7 @@ class Welcome extends React.Component {
 
   render() {
     const {
-      handleChange, onStart, onCreateNewUser, onDeleteAccount, success, failure, accountDeleted,
+      handleChange, onCreateNewUser, onDeleteAccount, success, failure, accountDeleted,
     } = this.props;
     let successMessage;
     let failureMessage;
@@ -43,7 +43,7 @@ class Welcome extends React.Component {
           onChange={handleChange}
         />
         <Link to="/dashboard">
-          <button type="button" onClick={onStart}>Log In</button>
+          <button type="button">Log In</button>
         </Link>
         <br />
         <br />
@@ -78,7 +78,6 @@ class Welcome extends React.Component {
 
 Welcome.propTypes = {
   handleChange: PropTypes.func.isRequired,
-  onStart: PropTypes.func.isRequired,
   onCreateNewUser: PropTypes.func.isRequired,
   onDeleteAccount: PropTypes.func.isRequired,
   success: PropTypes.bool.isRequired,

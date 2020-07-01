@@ -7,9 +7,9 @@ import style from '../../css/components/Dashboard/Dashboard.css';
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
-    const { chores, user } = this.props;
+    const { user } = this.props;
     this.state = {
-      chores,
+      chores: [],
       user,
       makeNewChore: false,
       choreName: '',
@@ -23,6 +23,7 @@ class Dashboard extends React.Component {
       subtasks: '',
       subtasksArray: [],
     };
+    this.loadData = this.loadData.bind(this);
     this.createNewChore = this.createNewChore.bind(this);
     this.makeNewChore = this.makeNewChore.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -30,12 +31,27 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    setTimeout(() => {
-      const { chores } = this.props;
-      this.setState({
-        chores,
-      });
-    }, 100);
+    this.loadData();
+  }
+
+  loadData() {
+    const { user } = this.state;
+    $.ajax({
+      url: '/login',
+      type: 'GET',
+      data: {
+        user,
+      },
+      dataType: 'json',
+      success: (data) => {
+        if (data.length !== 0) {
+          const { chores } = data[0];
+          this.setState({
+            chores,
+          });
+        }
+      },
+    });
   }
 
   handleChange(event) {
@@ -246,7 +262,6 @@ class Dashboard extends React.Component {
 }
 
 Dashboard.propTypes = {
-  chores: PropTypes.arrayOf(PropTypes.any).isRequired,
   user: PropTypes.string.isRequired,
 };
 

@@ -14,36 +14,14 @@ class App extends React.Component {
       username: '',
       newUsername: '',
       deleteAccountName: '',
-      chores: [],
       success: false,
       failure: false,
       accountDeleted: false,
     };
-    this.onStart = this.onStart.bind(this);
     this.onCreateNewUser = this.onCreateNewUser.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.onCreateNewChore = this.onCreateNewChore.bind(this);
     this.onDeleteAccount = this.onDeleteAccount.bind(this);
-  }
-
-  onStart() {
-    const { username } = this.state;
-    $.ajax({
-      url: '/login',
-      type: 'GET',
-      data: {
-        username,
-      },
-      dataType: 'json',
-      success: (data) => {
-        if (data.length !== 0) {
-          const { chores } = data[0];
-          this.setState({
-            chores,
-          });
-        }
-      },
-    });
   }
 
   onCreateNewUser() {
@@ -121,7 +99,6 @@ class App extends React.Component {
               return (
                 <div>
                   <Welcome
-                    onStart={this.onStart}
                     onCreateNewUser={this.onCreateNewUser}
                     onDeleteAccount={this.onDeleteAccount}
                     handleChange={this.handleChange}
