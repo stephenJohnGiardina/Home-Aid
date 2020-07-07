@@ -47,8 +47,24 @@ module.exports = {
 
   },
 
-  delete: () => {
-
+  deleteChore: (username, index, callback) => {
+    User.find({ username }, (err, doc) => {
+      if (err) {
+        callback(err);
+      } else {
+        let newChoreArray = doc[0].chores;
+        newChoreArray = newChoreArray.filter((chore) => {
+          return chore.index !== Number.parseInt(index, 10);
+        });
+        User.findOneAndUpdate({ username }, { chores: newChoreArray }, { new: true }, (error) => {
+          if (error) {
+            callback(error);
+          } else {
+            callback(null);
+          }
+        });
+      }
+    });
   },
 
   deleteAccount: (username, callback) => {

@@ -60,6 +60,18 @@ app.delete('/deleteAccount', (req, res) => {
   });
 });
 
+app.delete('/deleteChore', (req, res) => {
+  const { user, index } = req.body;
+  db.deleteChore(user, index, (err) => {
+    if (err) {
+      res.status(404);
+    } else {
+      res.status(200);
+    }
+    res.end();
+  });
+});
+
 app.put('/');
 
 app.listen(PORT, () => {

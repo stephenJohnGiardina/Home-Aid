@@ -137,6 +137,7 @@ class Dashboard extends React.Component {
       cost,
       subtasksArray,
     } = this.state;
+    const index = chores.length === 0 ? 0 : chores[chores.length - 1].index + 1;
     const choreData = {
       choreName,
       when,
@@ -144,7 +145,7 @@ class Dashboard extends React.Component {
       suppliesNeededArray,
       cost,
       subtasksArray,
-      index: chores.length,
+      index,
     };
     const post = JSON.stringify({
       chores,
@@ -243,12 +244,15 @@ class Dashboard extends React.Component {
           const result = (
             <div className={style.choreItem} key={chore.index}>
               <Chore
+                user={user}
                 name={chore.choreName}
                 when={chore.when}
                 whoArray={chore.whoArray}
                 suppliesNeededArray={chore.suppliesNeededArray}
                 cost={chore.cost}
                 subtasksArray={chore.subtasksArray}
+                index={chore.index}
+                loadData={this.loadData}
               />
               {hr}
             </div>
