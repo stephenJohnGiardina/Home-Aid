@@ -14,7 +14,6 @@ class Dashboard extends React.Component {
       makeNewChore: false,
       choreName: '',
       when: '',
-      whoseTurn: '',
       who: '',
       whoArray: [],
       suppliesNeeded: '',
