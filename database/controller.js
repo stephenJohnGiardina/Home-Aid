@@ -43,8 +43,29 @@ module.exports = {
     });
   },
 
-  updateChore: () => {
-
+  editChore: (editData, callback) => {
+    const { username, choreData } = editData;
+    User.find({ username }, (err, doc) => {
+      if (err) {
+        callback(err, null, null);
+      } else {
+        const { chores } = doc[0];
+        let editIndex;
+        for (let i = 0; i < chores.length; i += 1) {
+          if (chores[i].index === choreData.index) {
+            editIndex = i;
+          }
+        }
+        chores.splice(editIndex, 1, choreData);
+        User.findOneAndUpdate({ username }, { chores }, { new: true }, (error, document) => {
+          if (error) {
+            callback(error, null, null);
+          } else {
+            callback(null, document, editIndex);
+          }
+        });
+      }
+    });
   },
 
   deleteChore: (username, index, callback) => {

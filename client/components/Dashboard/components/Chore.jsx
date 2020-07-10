@@ -8,20 +8,26 @@ class Chore extends React.Component {
     const {
       user,
       index,
+      name,
+      when,
+      whoArray,
+      suppliesNeededArray,
+      cost,
+      subtasksArray,
     } = this.props;
     this.state = {
       user,
       index,
       editChoreOptions: false,
-      choreName: '',
-      when: '',
+      choreName: name,
+      when,
       who: '',
-      whoArray: [],
+      whoArray,
       suppliesNeeded: '',
-      suppliesNeededArray: [],
-      cost: 0,
+      suppliesNeededArray,
+      cost,
       subtasks: '',
-      subtasksArray: [],
+      subtasksArray,
     };
     this.handleChange = this.handleChange.bind(this);
     this.addToList = this.addToList.bind(this);
@@ -119,17 +125,54 @@ class Chore extends React.Component {
   }
 
   edit() {
-  }
-
-  render() {
     const {
-      name,
+      user,
+      choreName,
       when,
       whoArray,
       suppliesNeededArray,
       cost,
       subtasksArray,
-    } = this.props;
+      index,
+    } = this.state;
+    const editData = JSON.stringify({
+      username: user,
+      choreData: {
+        choreName,
+        when,
+        whoArray,
+        suppliesNeededArray,
+        cost,
+        subtasksArray,
+        index,
+      },
+    });
+    $.ajax({
+      url: 'editChore',
+      type: 'put',
+      data: { editData },
+      success: (data) => {
+        this.setState({
+          choreName: data.choreName,
+          cost: data.cost,
+          subtasksArray: data.subtasksArray,
+          whoArray: data.whoArray,
+          when: data.when,
+          suppliesNeededArray: data.suppliesNeededArray,
+        });
+      },
+    });
+  }
+
+  render() {
+    const {
+      choreName,
+      when,
+      whoArray,
+      suppliesNeededArray,
+      cost,
+      subtasksArray,
+    } = this.state;
     const { editChoreOptions } = this.state;
     let form;
     if (editChoreOptions) {
@@ -181,7 +224,7 @@ class Chore extends React.Component {
     }
     return (
       <div>
-        <h3>{name}</h3>
+        <h3>{choreName}</h3>
         <p>
           When:
           {when}

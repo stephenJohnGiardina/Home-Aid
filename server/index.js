@@ -72,7 +72,18 @@ app.delete('/deleteChore', (req, res) => {
   });
 });
 
-app.put('/');
+app.put('/editChore', (req, res) => {
+  const editData = JSON.parse(req.body.editData);
+  db.editChore(editData, (err, doc, index) => {
+    if (err) {
+      res.status(404);
+    } else {
+      res.status(202);
+      res.send(doc.chores[index]);
+    }
+    res.end();
+  });
+});
 
 app.listen(PORT, () => {
 });
