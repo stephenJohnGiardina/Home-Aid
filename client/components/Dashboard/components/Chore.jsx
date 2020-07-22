@@ -2,6 +2,36 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import $ from 'jquery';
 
+const deepEquals = (apple, orange) => {
+  if (typeof apple !== 'object' && !Array.isArray(apple)) {
+    return apple === orange;
+  }
+  if (Array.isArray(apple)) {
+    if (!Array.isArray(orange)) {
+      return false;
+    }
+    if (apple.length !== orange.length) {
+      return false;
+    }
+    for (let i = 0; i < apple.length; i += 1) {
+      if (!deepEquals(apple[i], orange[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+  const appleKeys = Object.keys(apple);
+  for (let i = 0; i < appleKeys.length; i += 1) {
+    if (!deepEquals(apple[appleKeys[i]], orange[appleKeys[i]])) {
+      return false;
+    }
+  }
+  if (Object.keys(apple).length !== Object.keys(orange).length) {
+    return false;
+  }
+  return true;
+};
+
 class Chore extends React.Component {
   constructor(props) {
     super(props);
@@ -28,6 +58,15 @@ class Chore extends React.Component {
       cost,
       subtasks: '',
       subtasksArray,
+      choreNameEdit: name,
+      whenEdit: when,
+      whoEdit: '',
+      whoArrayEdit: whoArray,
+      suppliesNeededEdit: '',
+      suppliesNeededArrayEdit: suppliesNeededArray,
+      costEdit: cost,
+      subtasksEdit: '',
+      subtasksArrayEdit: subtasksArray,
     };
     this.handleChange = this.handleChange.bind(this);
     this.addToList = this.addToList.bind(this);
@@ -47,48 +86,48 @@ class Chore extends React.Component {
     const { id } = event.target;
     const { state } = this;
     const {
-      who,
-      suppliesNeeded,
-      subtasks,
-      whoArray,
-      suppliesNeededArray,
-      subtasksArray,
+      whoEdit,
+      suppliesNeededEdit,
+      subtasksEdit,
+      whoArrayEdit,
+      suppliesNeededArrayEdit,
+      subtasksArrayEdit,
     } = state;
     const newArray = state[id];
-    if (event.target.id === 'whoArray') {
-      if (who.length !== 0) {
+    if (id === 'whoArrayEdit') {
+      if (whoEdit.length !== 0) {
         const whoItem = {
-          name: who,
-          index: whoArray.length,
+          name: whoEdit,
+          index: whoArrayEdit.length,
         };
         newArray.push(whoItem);
       }
       this.setState({
-        who: '',
+        whoEdit: '',
       });
     }
-    if (event.target.id === 'suppliesNeededArray') {
-      if (suppliesNeeded.length !== 0) {
+    if (id === 'suppliesNeededArrayEdit') {
+      if (suppliesNeededEdit.length !== 0) {
         const suppliesNeededItem = {
-          name: suppliesNeeded,
-          index: suppliesNeededArray.length,
+          name: suppliesNeededEdit,
+          index: suppliesNeededArrayEdit.length,
         };
         newArray.push(suppliesNeededItem);
       }
       this.setState({
-        suppliesNeeded: '',
+        suppliesNeededEdit: '',
       });
     }
-    if (event.target.id === 'subtasksArray') {
-      if (subtasks.length !== 0) {
+    if (id === 'subtasksArrayEdit') {
+      if (subtasksEdit.length !== 0) {
         const subtasksItem = {
-          name: subtasks,
-          index: subtasksArray.length,
+          name: subtasksEdit,
+          index: subtasksArrayEdit.length,
         };
         newArray.push(subtasksItem);
       }
       this.setState({
-        subtasks: '',
+        subtasksEdit: '',
       });
     }
     this.setState({
@@ -133,17 +172,40 @@ class Chore extends React.Component {
       suppliesNeededArray,
       cost,
       subtasksArray,
+      choreNameEdit,
+      whenEdit,
+      whoArrayEdit,
+      suppliesNeededArrayEdit,
+      costEdit,
+      subtasksArrayEdit,
       index,
     } = this.state;
+    /**
+     * These variables (suppliesNeededArraySend & subtasksArraySend) and
+     * if else blocks are here to shorten the length of the lines
+     * where suppliesNeededArray and subtasksArray are set in choreData in editData
+     */
+    let suppliesNeededArraySend;
+    if (deepEquals(suppliesNeededArrayEdit, suppliesNeededArray)) {
+      suppliesNeededArraySend = suppliesNeededArray;
+    } else {
+      suppliesNeededArraySend = suppliesNeededArrayEdit;
+    }
+    let subtasksArraySend;
+    if (deepEquals(subtasksArrayEdit, subtasksArray)) {
+      subtasksArraySend = subtasksArray;
+    } else {
+      subtasksArraySend = subtasksArrayEdit;
+    }
     const editData = JSON.stringify({
       username: user,
       choreData: {
-        choreName,
-        when,
-        whoArray,
-        suppliesNeededArray,
-        cost,
-        subtasksArray,
+        choreName: choreNameEdit === choreName ? choreName : choreNameEdit,
+        when: whenEdit === when ? when : whenEdit,
+        whoArray: deepEquals(whoArrayEdit, whoArray) ? whoArray : whoArrayEdit,
+        suppliesNeededArray: suppliesNeededArraySend,
+        cost: costEdit === cost ? cost : costEdit,
+        subtasksArray: subtasksArraySend,
         index,
       },
     });
@@ -159,6 +221,9 @@ class Chore extends React.Component {
           whoArray: data.whoArray,
           when: data.when,
           suppliesNeededArray: data.suppliesNeededArray,
+          whoArrayEdit: [],
+          suppliesNeededArrayEdit: [],
+          subtasksArrayEdit: [],
         });
       },
     });
@@ -172,6 +237,12 @@ class Chore extends React.Component {
       suppliesNeededArray,
       cost,
       subtasksArray,
+      choreNameEdit,
+      whenEdit,
+      costEdit,
+      whoArrayEdit,
+      suppliesNeededArrayEdit,
+      subtasksArrayEdit,
     } = this.state;
     const { editChoreOptions } = this.state;
     let form;
@@ -181,36 +252,36 @@ class Chore extends React.Component {
           <button type="button" onClick={this.close}>Close</button>
           <br />
           Chore Name:
-          <input onChange={this.handleChange} type="text" id="choreName" />
+          <input onChange={this.handleChange} type="text" id="choreNameEdit" value={choreNameEdit} />
           <br />
           When:
-          <input onChange={this.handleChange} type="text" id="when" />
+          <input onChange={this.handleChange} type="text" id="whenEdit" value={whenEdit} />
           <br />
           Who:
-          <input onChange={this.handleChange} type="text" id="who" />
-          <button type="button" onClick={this.addToList} id="whoArray">ADD</button>
-          {whoArray.map((item) => {
+          <input onChange={this.handleChange} type="text" id="whoEdit" />
+          <button type="button" onClick={this.addToList} id="whoArrayEdit">ADD</button>
+          {whoArrayEdit.map((item) => {
             return (
               <p key={item.index}>{item.name}</p>
             );
           })}
           <br />
           Supplies Needed:
-          <input onChange={this.handleChange} type="text" id="suppliesNeeded" />
-          <button type="button" onClick={this.addToList} id="suppliesNeededArray">ADD</button>
-          {suppliesNeededArray.map((item) => {
+          <input onChange={this.handleChange} type="text" id="suppliesNeededEdit" />
+          <button type="button" onClick={this.addToList} id="suppliesNeededArrayEdit">ADD</button>
+          {suppliesNeededArrayEdit.map((item) => {
             return (
               <p key={item.index}>{item.name}</p>
             );
           })}
           <br />
           Cost of Supplies:
-          <input onChange={this.handleChange} value={cost} type="number" id="cost" />
+          <input onChange={this.handleChange} value={costEdit} type="number" id="costEdit" />
           <br />
           Subtasks:
-          <input onChange={this.handleChange} type="text" id="subtasks" />
-          <button type="button" onClick={this.addToList} id="subtasksArray">ADD</button>
-          {subtasksArray.map((item) => {
+          <input onChange={this.handleChange} type="text" id="subtasksEdit" />
+          <button type="button" onClick={this.addToList} id="subtasksArrayEdit">ADD</button>
+          {subtasksArrayEdit.map((item) => {
             return (
               <p key={item.index}>{item.name}</p>
             );

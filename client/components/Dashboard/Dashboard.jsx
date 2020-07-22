@@ -248,7 +248,7 @@ class Dashboard extends React.Component {
                 when={chore.when}
                 whoArray={chore.whoArray}
                 suppliesNeededArray={chore.suppliesNeededArray}
-                cost={chore.cost}
+                cost={Number.parseInt(chore.cost, 10)}
                 subtasksArray={chore.subtasksArray}
                 index={chore.index}
                 loadData={this.loadData}
