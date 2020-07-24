@@ -13,8 +13,8 @@ app.use(express.static(path.join(__dirname, '/../public')));
 
 app.get('/login', (req, res) => {
   /**
-   * This is a route for logging in. If the username exists the data associated
-   * with that user will be sent back to the client. If the username does not
+   * This is a route for logging in. It takes in a username. If the username exists the data
+   * associated with that user will be sent back to the client. If the username does not
    * exist a 404 error will be sent back to the client.
    */
   const { user } = req.query;
@@ -80,6 +80,14 @@ app.delete('/deleteAccount', (req, res) => {
 });
 
 app.delete('/deleteChore', (req, res) => {
+  /**
+   * This is a route for deleting a chore. It takes in a username and and chore index. It will
+   * look up the account associated with the username and find the array of chores assosiated with
+   * that account. When it finds that array it will search for the chore object with the inputted
+   * index. Once it finds that chore it removes that chore from the accounts chores array.
+   * If the chore is successfully deleted a status of 200 will be sent back to the client.
+   * Otherwise a status of 404 will be sent back to the client.
+   */
   const { user, index } = req.body;
   db.deleteChore(user, index, (err) => {
     if (err) {
