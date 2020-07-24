@@ -45,24 +45,6 @@ app.post('/newUser', (req, res) => {
   });
 });
 
-app.post('/newChore', (req, res) => {
-  /**
-   * This is a route for creating a new chore. It takes in the data for a chore. The
-   * user the client is currently logged in as is looked up and the chore data gets
-   * added to the user's account.
-   */
-  const { chores, choreData, user } = JSON.parse(req.body.post);
-  chores.push(choreData);
-  db.createChore(user, chores, (err, userData) => {
-    if (err) {
-      res.status(404);
-    } else {
-      res.send(userData);
-    }
-    res.end();
-  });
-});
-
 app.delete('/deleteAccount', (req, res) => {
   /**
    * This is a route for deleting an account. If the account entered exists the account
@@ -79,21 +61,20 @@ app.delete('/deleteAccount', (req, res) => {
   });
 });
 
-app.delete('/deleteChore', (req, res) => {
+app.post('/newChore', (req, res) => {
   /**
-   * This is a route for deleting a chore. It takes in a username and and chore index. It will
-   * look up the account associated with the username and find the array of chores assosiated with
-   * that account. When it finds that array it will search for the chore object with the inputted
-   * index. Once it finds that chore it removes that chore from the accounts chores array.
-   * If the chore is successfully deleted a status of 200 will be sent back to the client.
-   * Otherwise a status of 404 will be sent back to the client.
+   * This is a route for creating a new chore. It takes a username, the chore array
+   * associated with that username, and the data for a new chore in the form of an object.
+   * The new chore object is added to the chore array and then this chore array replaces
+   * chore array currently associated with the username.
    */
-  const { user, index } = req.body;
-  db.deleteChore(user, index, (err) => {
+  const { chores, choreData, user } = JSON.parse(req.body.post);
+  chores.push(choreData);
+  db.createChore(user, chores, (err, userData) => {
     if (err) {
       res.status(404);
     } else {
-      res.status(200);
+      res.send(userData);
     }
     res.end();
   });
@@ -114,6 +95,26 @@ app.put('/editChore', (req, res) => {
     } else {
       res.status(202);
       res.send(doc.chores[index]);
+    }
+    res.end();
+  });
+});
+
+app.delete('/deleteChore', (req, res) => {
+  /**
+   * This is a route for deleting a chore. It takes in a username and and chore index. It will
+   * look up the account associated with the username and find the array of chores assosiated with
+   * that account. When it finds that array it will search for the chore object with the inputted
+   * index. Once it finds that chore it removes that chore from the accounts chores array.
+   * If the chore is successfully deleted a status of 200 will be sent back to the client.
+   * Otherwise a status of 404 will be sent back to the client.
+   */
+  const { user, index } = req.body;
+  db.deleteChore(user, index, (err) => {
+    if (err) {
+      res.status(404);
+    } else {
+      res.status(200);
     }
     res.end();
   });
