@@ -20,11 +20,19 @@ class App extends React.Component {
     };
     this.onCreateNewUser = this.onCreateNewUser.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.onCreateNewChore = this.onCreateNewChore.bind(this);
     this.onDeleteAccount = this.onDeleteAccount.bind(this);
   }
 
   onCreateNewUser() {
+    /**
+     * This methos is passed into and used by the Welcome component.
+     * This method takes the username in the state and send a request to the server.
+     * The server will then uses that username to create an account. If the server
+     * successfully creates the account then this method will display a message saying
+     * the account was created. If the server cannot make an account becauase an account
+     * with that name already exists for example, a message will be displayed saying the
+     * account could not be created because an account with that username already exists.
+     */
     const { newUsername } = this.state;
     $.ajax({
       url: '/newUser',
@@ -51,6 +59,13 @@ class App extends React.Component {
   }
 
   onDeleteAccount() {
+    /**
+     * This method is passed into and used by the Welcome component.
+     * This method takes the username in the state and sends a request to the server.
+     * The server checks a database to see if an account exists under that username.
+     * If an account exists, that account is deleted and a message saying that the
+     * account was deleted is displayed to the user.
+     */
     const { deleteAccountName } = this.state;
     $.ajax({
       url: '/deleteAccount',
@@ -66,19 +81,11 @@ class App extends React.Component {
     });
   }
 
-  onCreateNewChore() {
-    const { username, choreName } = this.state;
-    $.ajax({
-      url: '/newChore',
-      type: 'POST',
-      data: {
-        username,
-        choreName,
-      },
-    });
-  }
-
   handleChange(event) {
+    /**
+     * This is a simple method used by the input tags of the app. This method ensures
+     * that the state is updated on the change event of the input tags.
+     */
     this.setState({
       [event.target.id]: event.target.value,
     });
@@ -86,7 +93,7 @@ class App extends React.Component {
 
   render() {
     const {
-      username, chores, success, failure, accountDeleted,
+      username, success, failure, accountDeleted,
     } = this.state;
     return (
       <Router>
@@ -118,8 +125,6 @@ class App extends React.Component {
                 <div>
                   <Dashboard
                     user={username}
-                    chores={chores}
-                    onCreateNewChore={this.onCreateNewChore}
                   />
                 </div>
               );

@@ -77,12 +77,21 @@ class Chore extends React.Component {
   }
 
   handleChange(event) {
+    /**
+     * This is a simple method used by the input tags of the app. This method ensures
+     * that the state is updated on the change event of the input tags.
+     */
     this.setState({
       [event.target.id]: event.target.value,
     });
   }
 
   addToList(event) {
+    /**
+     * This is a method that is used in the create chore modal. When the add button
+     * next to a list is clicked, this method will add whatever is in the input field
+     * at that time to the list. Also the input field will be cleared.
+     */
     const { id } = event.target;
     const { state } = this;
     const {
@@ -136,6 +145,12 @@ class Chore extends React.Component {
   }
 
   deleteChore() {
+    /**
+     * This is a method that when clicked will delete a chore. This method will send a
+     * request to the server to delete a chore. Attached to the request is the username
+     * and the index of the chore that is to be deleted. The server will recieve the
+     * request and delete that chore from the database.
+     */
     const { user, index } = this.state;
     const { loadData } = this.props;
     $.ajax({
@@ -152,18 +167,30 @@ class Chore extends React.Component {
   }
 
   editChore() {
+    /**
+     * This is a simple method that is used to open the edit chore modal.
+     */
     this.setState({
       editChoreOptions: true,
     });
   }
 
   close() {
+    /**
+     * This is a simple method that is used to close the edit chore modal.
+     */
     this.setState({
       editChoreOptions: false,
     });
   }
 
   edit() {
+    /**
+     * This is a method that is used to edit a chore. This method sends a request to the server.
+     * Attached to the request is the data for a new chore. The server recieves this request and
+     * replaces the chore that is being edited with the chore that it received. The server sends
+     * back the data for the new chore and that data is then rendered to the screen.
+     */
     const {
       user,
       choreName,

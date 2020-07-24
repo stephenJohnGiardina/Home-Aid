@@ -34,6 +34,11 @@ class Dashboard extends React.Component {
   }
 
   loadData() {
+    /**
+     * This is a method that is run when the component loads onto the screen. This method
+     * sends a request for all the data for the account associated witht the username to the
+     * server. When a response is received along with the data, the data is rendered onto the page.
+     */
     const { user } = this.state;
     $.ajax({
       url: '/login',
@@ -54,12 +59,21 @@ class Dashboard extends React.Component {
   }
 
   handleChange(event) {
+    /**
+     * This is a simple method used by the input tags of the app. This method ensures
+     * that the state is updated on the change event of the input tags.
+     */
     this.setState({
       [event.target.id]: event.target.value,
     });
   }
 
   addToList(event) {
+    /**
+     * This is a method that is used in the create chore modal. When the add button
+     * next to a list is clicked, this method will add whatever is in the input field
+     * at that time to the list. Also the input field will be cleared.
+     */
     const { id } = event.target;
     const { state } = this;
     const {
@@ -79,9 +93,7 @@ class Dashboard extends React.Component {
         };
         newArray.push(whoItem);
       }
-      this.setState({
-        who: '',
-      });
+      this.setState({ who: '' });
     }
     if (event.target.id === 'suppliesNeededArray') {
       if (suppliesNeeded.length !== 0) {
@@ -91,9 +103,7 @@ class Dashboard extends React.Component {
         };
         newArray.push(suppliesNeededItem);
       }
-      this.setState({
-        suppliesNeeded: '',
-      });
+      this.setState({ suppliesNeeded: '' });
     }
     if (event.target.id === 'subtasksArray') {
       if (subtasks.length !== 0) {
@@ -103,9 +113,7 @@ class Dashboard extends React.Component {
         };
         newArray.push(subtasksItem);
       }
-      this.setState({
-        subtasks: '',
-      });
+      this.setState({ subtasks: '' });
     }
     this.setState({
       [event.target.id]: newArray,
@@ -113,6 +121,10 @@ class Dashboard extends React.Component {
   }
 
   makeNewChore() {
+    /**
+     * This method simply opens up a create chore modal with different fields to
+     * customize a chore.
+     */
     const { makeNewChore } = this.state;
     this.setState({
       makeNewChore: !makeNewChore,
@@ -126,6 +138,13 @@ class Dashboard extends React.Component {
   }
 
   createNewChore() {
+    /**
+     * This method is invoked when the user clicks the "Create New Chore" button. When this method
+     * is invoked a request is sent to the server. Attached to the request is the username of
+     * the account the client is currently logged in as and an object with data for a new chore.
+     * This request is recieved by the server and the server saves the chore in a databases for
+     * the account.
+     */
     const {
       chores,
       user,
@@ -173,6 +192,9 @@ class Dashboard extends React.Component {
     const { user } = this.props;
     let form;
     const {
+      who,
+      suppliesNeeded,
+      subtasks,
       chores,
       makeNewChore,
       whoArray,
@@ -190,7 +212,7 @@ class Dashboard extends React.Component {
           <input onChange={this.handleChange} type="text" id="when" />
           <br />
           Who:
-          <input onChange={this.handleChange} type="text" id="who" />
+          <input onChange={this.handleChange} type="text" id="who" value={who} />
           <button type="button" onClick={this.addToList} id="whoArray">ADD</button>
           {whoArray.map((item) => {
             return (
@@ -199,7 +221,7 @@ class Dashboard extends React.Component {
           })}
           <br />
           Supplies Needed:
-          <input onChange={this.handleChange} type="text" id="suppliesNeeded" />
+          <input onChange={this.handleChange} type="text" id="suppliesNeeded" value={suppliesNeeded} />
           <button type="button" onClick={this.addToList} id="suppliesNeededArray">ADD</button>
           {suppliesNeededArray.map((item) => {
             return (
@@ -211,7 +233,7 @@ class Dashboard extends React.Component {
           <input onChange={this.handleChange} value={cost} type="number" id="cost" />
           <br />
           Subtasks:
-          <input onChange={this.handleChange} type="text" id="subtasks" />
+          <input onChange={this.handleChange} type="text" id="subtasks" value={subtasks} />
           <button type="button" onClick={this.addToList} id="subtasksArray">ADD</button>
           {subtasksArray.map((item) => {
             return (
